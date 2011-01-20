@@ -156,17 +156,17 @@ public:
     virtual ~CWaitSendFsm () {}
     virtual int Init(IActor* obj)
     {
-        cout<<"prepare for wait send"<<endl;
+        cout<<"Init WaitSend"<<endl;
         return 0;
     }
     virtual int Process(IActor* obj)
     {
-        cout<<"do nothing"<<endl;
+        cout<<"Process WaitSend"<<endl;
         return 0;
     }
     virtual int Fini(IActor* obj)
     {
-        cout<<"exit for wait send"<<endl;
+        cout<<"Fini WaitSend"<<endl;
         return 0;
     }
 };
@@ -177,11 +177,12 @@ public:
     virtual ~CSendingFsm () {}
     virtual int Init(IActor* obj)
     {
-        cout<<"prepare for sending"<<endl;
+        cout<<"Init Sending"<<endl;
         return 0;
     }
     virtual int Process(IActor* obj)
     {
+        cout<<"Process Sending"<<endl;
         CSocketActor * chirdObj = (CSocketActor*) obj;
         int ret = chirdObj->HandleSend();
         if (ret == 1)
@@ -192,7 +193,7 @@ public:
     }
     virtual int Fini(IActor* obj)
     {
-        cout<<"exit for sending"<<endl;
+        cout<<"Fini Sending"<<endl;
         return 0;
     }
 };
@@ -203,17 +204,17 @@ public:
     virtual ~CSendOverFsm () {}
     virtual int Init(IActor* obj)
     {
-        cout<<"prepare for sendover"<<endl;
+        cout<<"Init SendOver"<<endl;
         return 0;
     }
     virtual int Process(IActor* obj)
     {
-        cout<<"do nothing"<<endl;
+        cout<<"Process SendOver"<<endl;
         return 0;
     }
     virtual int Fini(IActor* obj)
     {
-        cout<<"exit for sendover"<<endl;
+        cout<<"Fini SendOver"<<endl;
         return 0;
     }
 };
