@@ -38,45 +38,28 @@ using namespace std;
 #define foreach(container,it) \
     for(typeof((container).begin()) it = (container).begin();it!=(container).end();++it)
 
-#define FSMMGR (*CFsmMgr::Ins())
-
-class CFsmMgr
-{
-public:
-    static CFsmMgr * Ins()
-    {
-        static CFsmMgr * _ins = NULL;
-        if ( _ins == NULL)
-            _ins = new CFsmMgr();
-        return _ins;
-    }
-
-    IFsm*& operator[](int state)
-    {
-        return m_mapFsms[state];
-    }
-protected:
-    CFsmMgr()
-    {
-        static auto_ptr<CFsmMgr> _auto_ptr = auto_ptr<CFsmMgr>(this);
-    }
-    CFsmMgr(const CFsmMgr&);
-    virtual ~CFsmMgr(){}
-    friend class auto_ptr<CFsmMgr>;
-
-    map<int, IFsm*> m_mapFsms;
-};
-
 class CBaseActor : public IActor
 {
 public:
     CBaseActor () {
         m_Fsm = NULL;
+        m_mapFsmMgr = NULL;
     }
     virtual ~CBaseActor () {}
 
+    int AttachFsmMgr(map<int, IFsm*> * mapFsmMgr)
+    {
+        m_mapFsmMgr = mapFsmMgr;
+        return 0;
+    }
+
     int ChangeState(int destState)
     {
+        if (m_mapFsmMgr == NULL)
+        {
+            return -1;
+        }
+
         if (0 == destState)
         {
             //此次处理结束
@@ -88,7 +71,7 @@ public:
             return destState;
         }
         IFsm * destFsm = NULL;
-        destFsm = FSMMGR[destState];
+        destFsm = (*m_mapFsmMgr)[destState];
         int state = doChangeFsm(destFsm);
         return ChangeState(state);
     }
@@ -115,6 +98,7 @@ private:
 
 protected:
     IFsm* m_Fsm;
+    map<int, IFsm*> *m_mapFsmMgr;
 };
 //=============================================================================
 
@@ -239,15 +223,16 @@ public:
     {
         int count = 10;
 
-        FSMMGR[1]=new CWaitSendFsm();
-        FSMMGR[2]=new CSendingFsm();
-        FSMMGR[3]=new CSendOverFsm();
+        m_mapFsmMgr[1]=new CWaitSendFsm();
+        m_mapFsmMgr[2]=new CSendingFsm();
+        m_mapFsmMgr[3]=new CSendOverFsm();
 
         for (int i = 0; i < count; i++)
         {
             IActor * actor = new CSocketActor();
             m_vecActors.push_back(actor);
 
+            actor->AttachFsmMgr(&m_mapFsmMgr);
             actor->ChangeState(1);
         }
         return 0;
@@ -282,6 +267,7 @@ public:
 
 private:
     vector<IActor*> m_vecActors;
+    map<int, IFsm* > m_mapFsmMgr;
 };
 
 //=============================================================================

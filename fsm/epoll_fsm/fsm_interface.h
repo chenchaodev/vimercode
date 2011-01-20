@@ -9,10 +9,17 @@
 =============================================================================*/
 #ifndef _INTERFACES_H_
 #define _INTERFACES_H_
+#include <iostream>
+#include <map>
+using namespace std;
+
+class IFsm;
+
 class IActor
 {
 public:
     virtual ~IActor() {}
+    virtual int AttachFsmMgr(map<int, IFsm*> *mapFsmMgr)=0;
     virtual int ChangeState(int destState)=0;
 };
 
