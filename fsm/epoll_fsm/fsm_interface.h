@@ -37,6 +37,9 @@ public:
      * @param   obj
      *
      * @return  应该进入的另一个状态
+     *          0           结束本次Process执行，不进入其他状态
+     *          <0          结束整个请求（obj需要被后续删除）
+     *          else        其他状态（可以返回自己，但是会造成循环，有点危险）
      *          
      */
     virtual int Process(IActor* obj)=0;

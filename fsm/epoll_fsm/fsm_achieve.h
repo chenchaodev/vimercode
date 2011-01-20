@@ -77,17 +77,27 @@ public:
 
     int ChangeState(int destState)
     {
+        if (0 == destState)
+        {
+            //此次处理结束
+            return 0;
+        }
+        else if (destState < 0)
+        {
+            //需要关闭整个请求
+            return destState;
+        }
         IFsm * destFsm = NULL;
         destFsm = FSMMGR[destState];
-        doChangeFsm(destFsm);
-        return 0;
+        int state = doChangeFsm(destFsm);
+        return ChangeState(state);
     }
 private:
-    void doChangeFsm(IFsm* destFsm)
+    int doChangeFsm(IFsm* destFsm)
     {
         if (destFsm == NULL)
         {
-            return;
+            return 0;
         }
 
         if (m_Fsm != destFsm)
@@ -99,11 +109,7 @@ private:
             m_Fsm = destFsm;
             m_Fsm->Init(this);
         }
-        int state = m_Fsm->Process(this);
-
-        IFsm * newFsm = NULL;
-        newFsm = FSMMGR[state];
-        doChangeFsm(newFsm);
+        return m_Fsm->Process(this);
     }
 
 
