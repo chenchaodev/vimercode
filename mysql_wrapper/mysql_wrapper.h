@@ -130,27 +130,6 @@ public:
         return asVal;
     }
 
-    //特殊处理的两个函数
-    //数据库中存储的是int，需要展示成str
-    string asTimeStrFromStamp()
-    {
-        time_t lt = as<uint32_t>();
-        struct tm *ptr;
-        ptr=localtime(&lt);
-
-        char szData[32];
-        strftime(szData,sizeof(szData)-1,"%Y-%m-%d %H:%M:%S",ptr);
-
-        return szData;
-    }
-
-    //数据库中存储的是datetime，需要转化成int
-    uint32_t asTimeStampFromStr()
-    {
-        struct tm t_tm;
-        strptime(data(),"%Y-%m-%d %H:%M:%S",&t_tm);
-        return mktime(&t_tm);
-    }
 private:
     int pri_as(string& val)
     {
