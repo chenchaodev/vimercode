@@ -26,10 +26,10 @@ using namespace std;
 int main(int argc, char **argv)
 {
     SQLJoin sql_join;
-    sql_join.AddPair(SQLPair("name","dandan"));
-    sql_join.AddPair(SQLPair("sex",1));
-    sql_join.AddPair(SQLPair("high",1.1));
-    sql_join.AddPair(SQLPair("high",true));
+    sql_join.add_pair(SQLPair("name","dandan"));
+    sql_join.add_pair(SQLPair("sex",1));
+    sql_join.add_pair(SQLPair("high",1.1));
+    sql_join.add_pair(SQLPair("high",true));
 
     typedef SQLPair P;
     sql_join

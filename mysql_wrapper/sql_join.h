@@ -205,9 +205,9 @@ public:
      *
      * @return  0
      */
-    int AddPair(const string& key)
+    int add_pair(const string& key)
     {
-        return AddPair(SQLPair(key,""));
+        return add_pair(SQLPair(key,""));
     }
 
     /**
@@ -219,9 +219,9 @@ public:
      * @return  0
      */
     template <typename T> 
-    int AddPair(const string& key, const T& value)
+    int add_pair(const string& key, const T& value)
     {
-        return AddPair(SQLPair(key,value));
+        return add_pair(SQLPair(key,value));
     }
 
     /**
@@ -231,7 +231,7 @@ public:
      *
      * @return  0
      */
-    int AddPair(const SQLPair& pair_data)
+    int add_pair(const SQLPair& pair_data)
     {
         vector<SQLPair>::iterator findit = find_if(m_vecPairs.begin(),
                                                    m_vecPairs.end(),
@@ -257,7 +257,7 @@ public:
      */
     SQLJoin& operator << (const string& key)
     {
-        AddPair(key);
+        add_pair(key);
         return *this;
     }
 
@@ -270,7 +270,7 @@ public:
      */
     SQLJoin& operator << (const SQLPair& pair_data)
     {
-        AddPair(pair_data);
+        add_pair(pair_data);
         return *this;
     }
 
