@@ -201,31 +201,6 @@ private:
 
 class SQLJoin
 {
-private:
-    //用来查找是否有重名key的
-    //类内部可见即可
-    class MYSQLEqualKey
-    {
-    public:
-        MYSQLEqualKey(const string& key) {
-            m_key = key;
-        }
-
-        /**
-         * @brief   用来实现判断是否相等
-         *
-         * @param   pair_data       vector中的每个item
-         *
-         * @return  true            相等
-         *          false           不相等
-         */
-        bool operator() (const vector<SQLPair>::value_type &pair_data)
-        {
-            return m_key == pair_data.key();
-        }
-    private:
-        string m_key;
-    };
 public:
     SQLJoin() {}
     virtual ~SQLJoin() {}
@@ -265,18 +240,8 @@ public:
      */
     int add_pair(const SQLPair& pair_data)
     {
-        vector<SQLPair>::iterator findit = find_if(m_vecPairs.begin(),
-                                                   m_vecPairs.end(),
-                                                   MYSQLEqualKey(pair_data.key())
-                                                  );
-        if (m_vecPairs.end() == findit)
-        {
-            m_vecPairs.push_back(pair_data);
-        }
-        else
-        {
-            *findit = pair_data;
-        }
+        // 由于像 select sex = 1 or sex = 2，是可以重复的
+        m_vecPairs.push_back(pair_data);
         return 0;
     }
 
