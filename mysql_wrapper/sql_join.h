@@ -35,10 +35,11 @@ public:
      * @param   value       列值
      */
     template <typename T> 
-    SQLPair (const string& key, const T& value)
+    SQLPair (const string& key, const T& value, const string& op="=")
     {
         m_ss_value.clear();
         m_ss_value.str("");
+        m_op = op;
         _init(key,value);
     }
 
@@ -52,8 +53,15 @@ public:
         m_ss_value.clear();
         m_ss_value.str("");
         m_key = pair_data.m_key;
+        m_op = pair_data.m_op;
         m_ss_value << pair_data.m_ss_value.str();
     }
+
+    /**
+     * @brief   析构函数，可继承
+     */
+    virtual ~SQLPair() {}
+
     /**
      * @brief   赋值操作符
      *
@@ -66,6 +74,7 @@ public:
         m_ss_value.clear();
         m_ss_value.str("");
         m_key = pair_data.m_key;
+        m_op = pair_data.m_op;
         m_ss_value << pair_data.m_ss_value.str();
         return *this;
     }
@@ -75,7 +84,7 @@ public:
      *
      * @return  列名
      */
-    string key()const
+    string key() const
     {
         return m_key;
     }
@@ -85,26 +94,34 @@ public:
      *
      * @return  列值
      */
-    string value()const
+    string value() const
     {
         return m_ss_value.str();
     }
 
     /**
-     * @brief   返回列名=列值的pair
+     * @brief   返回string类型的操作符
      *
-     * @return  列名=列值的pair
+     * @return  操作符
      */
-    string pair()const
+    string op() const
+    {
+        return m_op;
+    }
+
+    /**
+     * @brief   返回列名 操作符(=) 列值的pair
+     *
+     * @return  列名 操作符(=) 列值的pair
+     */
+    string pair() const
     {
         stringstream ss_pair;
         ss_pair << m_key
-            << "="
+            << " " << m_op << " "
             << m_ss_value.str();
         return ss_pair.str();
     }
-
-    virtual ~SQLPair() {}
 
 private:
     /**
@@ -176,6 +193,8 @@ private:
 private:
     //列名
     string m_key;
+    //操作符，如=,>=
+    string m_op;
     //转化后的列值
     stringstream m_ss_value;
 };
@@ -356,11 +375,32 @@ public:
     }
 
     /**
+     * @brief   返回有多少个pair
+     *
+     * @return  pair个数
+     */
+    uint32_t size()
+    {
+        return m_vecPairs.size();
+    }
+
+    /**
      * @brief   清空所有数据
      */
     void clear()
     {
         m_vecPairs.clear();
+    }
+
+    /**
+     * @brief   获取内部的vec，无特殊情况不要调用。
+     *          主要考虑到可能有遍历的需求.
+     *
+     * @return  m_vecPairs
+     */
+    vector<SQLPair>& get_vec_pairs()
+    {
+        return m_vecPairs;
     }
 
 private:

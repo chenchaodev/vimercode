@@ -299,3 +299,7 @@ string CMYSQLWrapper::EscStr(const char* src)
     return EscStr(src,len);
 }
 
+MYSQL* CMYSQLWrapper::GetMYSQLPtr()
+{
+    return m_Database;
+}

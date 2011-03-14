@@ -271,6 +271,13 @@ public:
      */
     string EscStr(const char* src);
 
+    /**
+     * @brief   获取原始的mysql指针，一般情况下不要调用
+     *
+     * @return  
+     */
+    MYSQL* GetMYSQLPtr();
+
 protected:
     void _CloseMySQL();
 
