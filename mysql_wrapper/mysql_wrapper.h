@@ -88,7 +88,7 @@ public:
     //ÉèÖÃÊı¾İ
     int SetData(const char* pData, int iLen)
     {
-        if (pData == NULL)
+        if (!pData)
         {
             m_bNull = true;
             return 0;

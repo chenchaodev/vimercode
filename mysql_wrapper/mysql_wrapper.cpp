@@ -137,9 +137,15 @@ void CMYSQLWrapper::Close()
 
 int CMYSQLWrapper::Query(const char* strSql)
 {
-    if(m_Database == NULL)
+    if (!strSql)
     {
-        MYSQL_WRAPPER_ERROR("Error: query error,pointer is null\n");
+        MYSQL_WRAPPER_ERROR("Error: query error,strSql is null\n");
+        return EMYSQLErrSystemPointer;
+    }
+
+    if(!m_Database)
+    {
+        MYSQL_WRAPPER_ERROR("Error: query error,m_Database is null\n");
         return EMYSQLErrSystemPointer;
     }
 
@@ -223,9 +229,9 @@ int CMYSQLWrapper::Query(const char* strSql, int& affectRowsCount)
 
 int CMYSQLWrapper::Result(MYSQL_RES*& result)
 {
-    if(m_Database == NULL)
+    if(!m_Database)
     {
-        MYSQL_WRAPPER_ERROR("Error: query error,pointer is null\n");
+        MYSQL_WRAPPER_ERROR("Error: query error,m_Database is null\n");
         return EMYSQLErrSystemPointer;
     }
 
@@ -257,6 +263,11 @@ int CMYSQLWrapper::AffectedRows()
 
 string CMYSQLWrapper::EscStr(const char* src, uint32_t len)
 {
+    if (!src)
+    {
+        MYSQL_WRAPPER_ERROR("src is null");
+        return "";
+    }
     char *escapeBuff = new char[len*2 + 1];
 
     mysql_real_escape_string(m_Database,escapeBuff,src,len);
@@ -270,16 +281,12 @@ string CMYSQLWrapper::EscStr(const char* src, uint32_t len)
 
 string CMYSQLWrapper::EscStr(const char* src)
 {
+    if (!src)
+    {
+        MYSQL_WRAPPER_ERROR("src is null");
+        return "";
+    }
     uint32_t len = strlen(src);
-
-    char *escapeBuff = new char[len*2 + 1];
-
-    mysql_real_escape_string(m_Database,escapeBuff,src,len);
-    string strDest(escapeBuff);
-
-    delete [] escapeBuff;
-    escapeBuff = NULL;
-
-    return strDest;
+    return EscStr(src,len);
 }
 
