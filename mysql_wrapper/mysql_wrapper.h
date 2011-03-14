@@ -191,8 +191,12 @@ public:
      * @return  0           succ
      *          else        fail
      */
-    int Connect(const char* ip,const char* user,const char* pwd,const char* strDb);
+    int Open(const char* ip,const char* user,const char* pwd,const char* strDb);
 
+    /**
+     * @brief   关闭链接并释放result
+     */
+    void Close();
 
     /**
      * @brief   执行SQL语句
@@ -203,7 +207,30 @@ public:
      * @return  0           succ
      *          else        fail
      */
-    int Execute(const char* strSql);
+    int Query(const char* strSql);
+
+    /**
+     * @brief   针对Read(select)相关的的Query，可以支持blob了
+     *
+     * @param   strSql          sql语句
+     * @param   vecData         rows
+     *
+     * @return  0               succ
+     *          else            fail
+     */
+    int Query(const char* strSql, vector<map<string, MYSQLValue> > &vecData);
+
+    /**
+     * @brief   针对Write(insert,update,delete)相关的Query
+     *
+     * @param   strSql          sql语句
+     * @param   affectRowsCount 影响的行的个数
+     *
+     * @return  0               succ
+     *          else            fail
+     */
+    int Query(const char* strSql, int& affectRowsCount);
+
 
     /**
      * @brief   Select时获取数据，记得手工析构，或者用StMYSQLRes
@@ -215,7 +242,6 @@ public:
      */
     int Result(MYSQL_RES *&result);
 
-
     /**
      * @brief   返回影响行数
      *
@@ -223,7 +249,7 @@ public:
      *          0           没有更新
      *          <0          fail
      */
-    int AffectRows();
+    int AffectedRows();
 
     /**
      * @brief   主要是将blob转成字符串
@@ -233,7 +259,7 @@ public:
      *
      * @return  转化后的字符串
      */
-    string EscapeRealString(const char* src,uint32_t len);
+    string EscStr(const char* src,uint32_t len);
 
     /**
      * @brief   将字符串中的某些字符转化(如')
@@ -242,35 +268,7 @@ public:
      *
      * @return  转化后的字符串
      */
-    string EscapeRealString(const char* src);
-
-    /**
-     * @brief   关闭链接并释放result
-     */
-    void Close();
-
-    /**
-     * @brief   在Execute上封装了一层Read相关的(select)，可以支持blob了
-     *
-     * @param   strSql          sql语句
-     * @param   vecData         rows
-     *
-     * @return  0               succ
-     *          else            fail
-     */
-    int ExecuteRead(const char* strSql, vector<map<string, MYSQLValue> > &vecData);
-
-    /**
-     * @brief   在Execute上封装了一层Write相关的(insert,update,delete)
-     *
-     * @param   strSql          sql语句
-     * @param   affectRowsCount 影响的行的个数
-     *
-     * @return  0               succ
-     *          else            fail
-     */
-    int ExecuteWrite(const char* strSql, int& affectRowsCount);
-
+    string EscStr(const char* src);
 
 protected:
     void _CloseMySQL();

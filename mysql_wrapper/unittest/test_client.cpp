@@ -55,7 +55,7 @@ int clear_data()
     ss << "delete from tb_test";
 
     int affectRowsNum;
-    int ret = g_client.ExecuteWrite(ss.str().c_str(),affectRowsNum);
+    int ret = g_client.Query(ss.str().c_str(),affectRowsNum);
     return ret;
 }
 
@@ -65,13 +65,13 @@ TEST(mysql_wrapper_easy, insert)
     stringstream ss;
     ss 
         << "insert into tb_test(name,sex) values('"
-        << g_client.EscapeRealString(g_name.c_str())
+        << g_client.EscStr(g_name.c_str())
         << "',"
         << g_sex
         << ");";
 
     int affectRowsNum;
-    int ret = g_client.ExecuteWrite(ss.str().c_str(), affectRowsNum);
+    int ret = g_client.Query(ss.str().c_str(), affectRowsNum);
     ASSERT_EQ(ret, 0) << g_client.GetErrMsg();
 
     EXPECT_GE(affectRowsNum,0) << g_client.GetErrMsg();
@@ -89,7 +89,7 @@ TEST(mysql_wrapper_easy, update)
         << g_name
         <<"';";
     int affectRowsNum;
-    int ret = g_client.ExecuteWrite(ss.str().c_str(),affectRowsNum);
+    int ret = g_client.Query(ss.str().c_str(),affectRowsNum);
     ASSERT_EQ(ret, 0) << g_client.GetErrMsg();
 
     EXPECT_GE(affectRowsNum,0) << g_client.GetErrMsg();
@@ -98,7 +98,7 @@ TEST(mysql_wrapper_easy, select)
 {
     vector<map<string,MYSQLValue> > vecData;
     string sql = "select * from tb_test where name = '"+g_name_up+"'";
-    int ret = g_client.ExecuteRead(sql.c_str(),vecData);
+    int ret = g_client.Query(sql.c_str(),vecData);
     ASSERT_EQ(ret, 0) << g_client.GetErrMsg();
 
     foreach(vecData, it_vec)
@@ -126,7 +126,7 @@ TEST(mysql_wrapper_join, insert)
 
     SQLJoin sql_join;
     sql_join 
-        << SQLPair("name", g_client.EscapeRealString(g_name.c_str()))
+        << SQLPair("name", g_client.EscStr(g_name.c_str()))
         << SQLPair("sex", g_sex);
 
     stringstream ss;
@@ -138,7 +138,7 @@ TEST(mysql_wrapper_join, insert)
         << ")";
 
     int affectRowsNum;
-    int ret = g_client.ExecuteWrite(ss.str().c_str(), affectRowsNum);
+    int ret = g_client.Query(ss.str().c_str(), affectRowsNum);
     ASSERT_EQ(ret, 0) << g_client.GetErrMsg();
 
     EXPECT_GE(affectRowsNum,0) << g_client.GetErrMsg();
@@ -158,7 +158,7 @@ TEST(mysql_wrapper_join, update)
         << g_name
         <<"';";
     int affectRowsNum;
-    int ret = g_client.ExecuteWrite(ss.str().c_str(),affectRowsNum);
+    int ret = g_client.Query(ss.str().c_str(),affectRowsNum);
     ASSERT_EQ(ret, 0) << g_client.GetErrMsg();
 
     EXPECT_GE(affectRowsNum,0) << g_client.GetErrMsg();
@@ -186,7 +186,7 @@ TEST(mysql_wrapper_join, select)
         << sql_join2.pairs("and");
 
     vector<map<string,MYSQLValue> > vecData;
-    int ret = g_client.ExecuteRead(ss.str().c_str(),vecData);
+    int ret = g_client.Query(ss.str().c_str(),vecData);
     ASSERT_EQ(ret, 0) << g_client.GetErrMsg();
 
     foreach(vecData, it_vec)
@@ -209,8 +209,8 @@ TEST(mysql_wrapper_join, select)
 
 int main(int argc, char **argv)
 {
-    //int ret = g_client.Connect("localhost","dantezhu",NULL,"soci");
-    int ret = g_client.Connect("127.0.0.1","dantezhu",NULL,"soci");
+    int ret = g_client.Open("localhost","dantezhu",NULL,"soci");
+    //int ret = g_client.Open("127.0.0.1","dantezhu",NULL,"soci");
     if (ret)
     {
         cout << ret << "," << g_client.GetErrMsg() << endl;

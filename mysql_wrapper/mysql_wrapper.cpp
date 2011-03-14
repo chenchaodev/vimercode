@@ -61,7 +61,7 @@ void CMYSQLWrapper::_CloseMySQL()
     }
 }
 
-int CMYSQLWrapper::Connect(const char* ip,const char* user,const char* pwd,const char* db)
+int CMYSQLWrapper::Open(const char* ip,const char* user,const char* pwd,const char* db)
 {
     _CloseMySQL();
 
@@ -129,92 +129,31 @@ int CMYSQLWrapper::Connect(const char* ip,const char* user,const char* pwd,const
 
     return 0;
 }
-int CMYSQLWrapper::Execute(const char* strSql)
-{
-    if(m_Database == NULL)
-    {
-        MYSQL_WRAPPER_ERROR("Error: execute error,pointer is null\n");
-        return EMYSQLErrSystemPointer;
-    }
-
-    if(mysql_query(m_Database, strSql) != 0)
-    {
-        MYSQL_WRAPPER_ERROR("Error: Unable to execute query,errMsg=%s\n",mysql_error(m_Database));
-        return EMYSQLErrDBExe;
-    }
-    return 0;
-}
-
-int CMYSQLWrapper::Result(MYSQL_RES*& result)
-{
-    if(m_Database == NULL)
-    {
-        MYSQL_WRAPPER_ERROR("Error: execute error,pointer is null\n");
-        return EMYSQLErrSystemPointer;
-    }
-
-    // Retrieve query result from server...
-    MYSQL_RES *t_Result = NULL;
-    t_Result = mysql_store_result(m_Database);
-
-    // Failed...
-    if(!t_Result)
-    {
-        MYSQL_WRAPPER_ERROR("Error: Unable to retrieve result\n");
-        return EMYSQLErrDBRes;
-    }
-    //对外暴露
-    result = t_Result;
-    return 0;
-}
-
-int CMYSQLWrapper::AffectRows()
-{
-    int ret = mysql_affected_rows(m_Database);
-    if(ret<=0)
-    {
-        MYSQL_WRAPPER_ERROR("Error: AffectRows rows:[%u]\n",ret);
-        return EMYSQLErrDBRes;
-    }
-    return ret;
-}
-
-string CMYSQLWrapper::EscapeRealString(const char* src, uint32_t len)
-{
-    char *escapeBuff = new char[len*2 + 1];
-
-    mysql_real_escape_string(m_Database,escapeBuff,src,len);
-    string strDest(escapeBuff);
-
-    delete [] escapeBuff;
-    escapeBuff = NULL;
-
-    return strDest;
-}
-
-string CMYSQLWrapper::EscapeRealString(const char* src)
-{
-    uint32_t len = strlen(src);
-
-    char *escapeBuff = new char[len*2 + 1];
-
-    mysql_real_escape_string(m_Database,escapeBuff,src,len);
-    string strDest(escapeBuff);
-
-    delete [] escapeBuff;
-    escapeBuff = NULL;
-
-    return strDest;
-}
 
 void CMYSQLWrapper::Close()
 {
     _CloseMySQL();
 }
 
-int CMYSQLWrapper::ExecuteRead(const char* strSql, vector<map<string, MYSQLValue> > &vecData)
+int CMYSQLWrapper::Query(const char* strSql)
 {
-    int ret = Execute(strSql);
+    if(m_Database == NULL)
+    {
+        MYSQL_WRAPPER_ERROR("Error: query error,pointer is null\n");
+        return EMYSQLErrSystemPointer;
+    }
+
+    if(mysql_query(m_Database, strSql) != 0)
+    {
+        MYSQL_WRAPPER_ERROR("Error: Unable to query,errMsg=%s\n",mysql_error(m_Database));
+        return EMYSQLErrDBExe;
+    }
+    return 0;
+}
+
+int CMYSQLWrapper::Query(const char* strSql, vector<map<string, MYSQLValue> > &vecData)
+{
+    int ret = Query(strSql);
     if (ret)
     {
         return ret;
@@ -268,15 +207,79 @@ int CMYSQLWrapper::ExecuteRead(const char* strSql, vector<map<string, MYSQLValue
 
     return 0;
 }
-int CMYSQLWrapper::ExecuteWrite(const char* strSql, int& affectRowsCount)
+
+int CMYSQLWrapper::Query(const char* strSql, int& affectRowsCount)
 {
-    int ret = Execute(strSql);
+    int ret = Query(strSql);
     if (ret)
     {
         return ret;
     }
 
-    affectRowsCount = AffectRows();
+    affectRowsCount = AffectedRows();
 
     return 0;
 }
+
+int CMYSQLWrapper::Result(MYSQL_RES*& result)
+{
+    if(m_Database == NULL)
+    {
+        MYSQL_WRAPPER_ERROR("Error: query error,pointer is null\n");
+        return EMYSQLErrSystemPointer;
+    }
+
+    // Retrieve query result from server...
+    MYSQL_RES *t_Result = NULL;
+    t_Result = mysql_store_result(m_Database);
+
+    // Failed...
+    if(!t_Result)
+    {
+        MYSQL_WRAPPER_ERROR("Error: Unable to retrieve result\n");
+        return EMYSQLErrDBRes;
+    }
+    //对外暴露
+    result = t_Result;
+    return 0;
+}
+
+int CMYSQLWrapper::AffectedRows()
+{
+    int ret = mysql_affected_rows(m_Database);
+    if(ret<=0)
+    {
+        MYSQL_WRAPPER_ERROR("Error: AffectedRows rows:[%u]\n",ret);
+        return EMYSQLErrDBRes;
+    }
+    return ret;
+}
+
+string CMYSQLWrapper::EscStr(const char* src, uint32_t len)
+{
+    char *escapeBuff = new char[len*2 + 1];
+
+    mysql_real_escape_string(m_Database,escapeBuff,src,len);
+    string strDest(escapeBuff);
+
+    delete [] escapeBuff;
+    escapeBuff = NULL;
+
+    return strDest;
+}
+
+string CMYSQLWrapper::EscStr(const char* src)
+{
+    uint32_t len = strlen(src);
+
+    char *escapeBuff = new char[len*2 + 1];
+
+    mysql_real_escape_string(m_Database,escapeBuff,src,len);
+    string strDest(escapeBuff);
+
+    delete [] escapeBuff;
+    escapeBuff = NULL;
+
+    return strDest;
+}
+
