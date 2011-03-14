@@ -187,11 +187,12 @@ public:
      * @param   user        用户名
      * @param   pwd         密码(没有则传NULL)
      * @param   db          库(没有则传NULL)
+     * @param   charset     编码(NULL,utf8,gb2312)
      *
      * @return  0           succ
      *          else        fail
      */
-    int Open(const char* ip,const char* user,const char* pwd,const char* strDb);
+    int Open(const char* ip, const char* user, const char* pwd, const char* strDb, const char* charset=NULL);
 
     /**
      * @brief   关闭链接并释放result

@@ -61,7 +61,7 @@ void CMYSQLWrapper::_CloseMySQL()
     }
 }
 
-int CMYSQLWrapper::Open(const char* ip,const char* user,const char* pwd,const char* db)
+int CMYSQLWrapper::Open(const char* ip, const char* user, const char* pwd, const char* db, const char* charset)
 {
     _CloseMySQL();
 
@@ -74,6 +74,14 @@ int CMYSQLWrapper::Open(const char* ip,const char* user,const char* pwd,const ch
         MYSQL_WRAPPER_ERROR("Error: Unable to initialize MySQL API\n");
 
         return EMYSQLErrDBInit;
+    }
+
+    if (charset)
+    {
+        if (mysql_options(m_Database, MYSQL_SET_CHARSET_NAME, charset) != 0) {
+            MYSQL_WRAPPER_ERROR("mysql_options MYSQL_SET_CHARSET_NAME Error %u: %s\n",mysql_errno(m_Database), mysql_error(m_Database));
+            return EMYSQLErrDBInit;
+        }
     }
 
     /*
@@ -97,7 +105,7 @@ int CMYSQLWrapper::Open(const char* ip,const char* user,const char* pwd,const ch
 
     //set re-conn to true. could use ping to reconn
     if (mysql_options(m_Database, MYSQL_OPT_RECONNECT, &reconnect) != 0) {
-        MYSQL_WRAPPER_ERROR("mysql_options Error %u: %s\n",mysql_errno(m_Database), mysql_error(m_Database));
+        MYSQL_WRAPPER_ERROR("mysql_options MYSQL_OPT_RECONNECT Error %u: %s\n",mysql_errno(m_Database), mysql_error(m_Database));
         return EMYSQLErrDBInit;
     }
 
@@ -118,7 +126,7 @@ int CMYSQLWrapper::Open(const char* ip,const char* user,const char* pwd,const ch
 
     //set re-conn to true. could use ping to reconn
     if (mysql_options(m_Database, MYSQL_OPT_RECONNECT, &reconnect) != 0) {
-        MYSQL_WRAPPER_ERROR("mysql_options Error %u: %s\n", mysql_errno(m_Database), mysql_error(m_Database));
+        MYSQL_WRAPPER_ERROR("mysql_options MYSQL_OPT_RECONNECT Error %u: %s\n", mysql_errno(m_Database), mysql_error(m_Database));
         return EMYSQLErrDBInit;
     }
 
