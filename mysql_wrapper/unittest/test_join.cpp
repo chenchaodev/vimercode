@@ -31,9 +31,12 @@ int main(int argc, char **argv)
     sql_join.add_pair(SQLPair("high",1.1));
     sql_join.add_pair(SQLPair("high",true));
 
+    string v1="v1";
+
     typedef SQLPair P;
     sql_join
-        << P("what","go")
+        << P("what",(char*)"go")
+        << P("str1","v1")
         << P("iend",false);
 
     cout << sql_join.keys()
@@ -41,6 +44,8 @@ int main(int argc, char **argv)
         << sql_join.values()
         << endl
         << sql_join.pairs();
+
+    cout << endl;    
 
     return 0;
 }

@@ -115,7 +115,7 @@ private:
      *
      * @return  0
      */
-    int _init(const string& key, const char* &value)
+    int _init(const string& key, const char* value)
     {
         m_key = key;
         if (NULL == value)
@@ -128,6 +128,19 @@ private:
             m_ss_value << "'" << value << "'";
         }
         return 0;
+    }
+    /**
+     * @brief   作用和const char*一样，但是为了解决这种情况下会走模板的bug:
+     *          SQLPair("appname",(char*)"yidong")
+     *
+     * @param   key         列名   
+     * @param   value       列值
+     *
+     * @return  0
+     */
+    int _init(const string& key, char* value)
+    {
+        return _init(key, (const char*)value);
     }
     /**
      * @brief   实际初始化函数，特殊处理了列值为string类型（在列值两边加上'）
