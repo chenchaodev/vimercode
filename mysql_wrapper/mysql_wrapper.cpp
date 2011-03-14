@@ -123,9 +123,10 @@ int CMYSQLWrapper::Open(const char* ip,const char* user,const char* pwd,const ch
     }
 
 #endif
-#if MYSQL_VERSION_ID < 50013
-#warning "MYSQL_VERSION_ID <= 50013, not support MYSQL_OPT_RECONNECT"
-#endif
+
+/*#if MYSQL_VERSION_ID < 50013
+#warning "MYSQL_VERSION_ID <= 50013, support MYSQL_OPT_RECONNECT default"
+#endif*/
 
     return 0;
 }
