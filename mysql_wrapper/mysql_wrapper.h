@@ -8,8 +8,10 @@
 #     HomePage: http://www.vimer.cn
 #
 #      Created: 2011-03-09 19:10:45
-#      Version: 0.0.1
+#      Version: 0.0.2
 #      History:
+#               0.0.2 | dantezhu | 2011-03-15 20:16:05 | 判断字符串的长度,防止
+#                                                      | 转化为随机值
 #               0.0.1 | dantezhu | 2011-03-09 19:10:45 | initialization
 #
 =============================================================================*/
@@ -141,8 +143,16 @@ private:
     template <typename T> 
     int pri_as(T& val)
     {
+//Add-Begin by dantezhu in 2011-03-15 20:15:19
+//要不然如果是空串的话，转成的int是随机值
+        if (this->size() <= 0)
+        {
+            val = 0;
+            return 0;
+        }
+//Add-End
         stringstream ss;
-        ss << data();
+        ss << this->data();
         ss >> val;
         return 0;
     }
