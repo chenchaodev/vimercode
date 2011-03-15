@@ -15,6 +15,9 @@
 =============================================================================*/
 #ifndef __SQL_JOIN_H__
 #define __SQL_JOIN_H__
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
 #include <iostream>
 #include <memory>
 #include <sstream>
