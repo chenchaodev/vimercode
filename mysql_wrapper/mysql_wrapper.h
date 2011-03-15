@@ -36,21 +36,19 @@ using namespace std;
 
 //统一错误返回码
 typedef enum {
-    /* 成功 */
-    EMYSQLSucceed = 0,
+    //成功
+    EMYSQLSuc = 0,
 
-    /* 系统错误 */
-    EMYSQLErrSystem = -1000,        //非法操作
-    EMYSQLErrSystemMemory,          //内存分配失败
-    EMYSQLErrSystemPointer,         //指针错误
-    EMYSQLErrSystemNoMem,           //空间不够
+    //系统错误
+    EMYSQLErrSys = -1000,           //非法操作
+    EMYSQLErrSysMem,                //内存分配失败
+    EMYSQLErrSysPtr,                //指针错误
 
-    /*DB错误*/
+    //DB错误
     EMYSQLErrDBInit = -2000,        //DB初始化失败
     EMYSQLErrDBConn,                //DB连接失败
     EMYSQLErrDBExe,                 //DB执行失败
     EMYSQLErrDBRes,                 //DBResult为空
-    EMYSQLErrDBEmpty,               //数据不存在
 } EMYSQLRetcode;
 
 

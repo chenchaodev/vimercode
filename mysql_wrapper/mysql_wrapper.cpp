@@ -149,13 +149,13 @@ int CMYSQLWrapper::Query(const char* strSql)
     if (!strSql)
     {
         MYSQL_WRAPPER_ERROR("Error: query error,strSql is null\n");
-        return EMYSQLErrSystemPointer;
+        return EMYSQLErrSysPtr;
     }
 
     if(!m_Database)
     {
         MYSQL_WRAPPER_ERROR("Error: query error,m_Database is null\n");
-        return EMYSQLErrSystemPointer;
+        return EMYSQLErrSysPtr;
     }
 
     if(mysql_query(m_Database, strSql) != 0)
@@ -196,7 +196,7 @@ int CMYSQLWrapper::Query(const char* strSql, vector<map<string, MYSQLValue> > &v
     if (!fields)
     {
         MYSQL_WRAPPER_ERROR("Error mysql_fetch_fields fail");
-        return EMYSQLErrSystem;
+        return EMYSQLErrSys;
     }
 
     unsigned long *lengths = NULL;
@@ -208,7 +208,7 @@ int CMYSQLWrapper::Query(const char* strSql, vector<map<string, MYSQLValue> > &v
         if (!lengths)
         {
             MYSQL_WRAPPER_ERROR("Error mysql_fetch_lengths fail,index:%u",unIndex);
-            return EMYSQLErrSystem;
+            return EMYSQLErrSys;
         }
 
         map<string, MYSQLValue> tmpMapData;
@@ -241,7 +241,7 @@ int CMYSQLWrapper::Result(MYSQL_RES*& result)
     if(!m_Database)
     {
         MYSQL_WRAPPER_ERROR("Error: query error,m_Database is null\n");
-        return EMYSQLErrSystemPointer;
+        return EMYSQLErrSysPtr;
     }
 
     // Retrieve query result from server...
