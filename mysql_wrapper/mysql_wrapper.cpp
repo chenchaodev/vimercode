@@ -15,6 +15,35 @@
 =============================================================================*/
 #include "mysql_wrapper.h"
 
+#ifndef MYSQL_WRAPPER_ERROR
+#define MYSQL_WRAPPER_ERROR(fmt, args...) \
+    snprintf(m_szErrMsg, sizeof(m_szErrMsg), "[%s][%d][%s]"fmt, \
+             __FILE__, __LINE__,__FUNCTION__, ##args)
+#endif
+
+#define MYSQL_WRAPPER_COPY(dest,src) \
+    if (dest) \
+    { \
+        delete [] dest; \
+        dest = NULL; \
+    } \
+    if (src) \
+    { \
+        dest = new char[strlen(src)+1]; \
+        snprintf(dest,strlen(src)+1,"%s",src); \
+    } \
+    else \
+    { \
+        dest = NULL; \
+    }
+
+#define MYSQL_WRAPPER_FREE(ptr) \
+    if (ptr) \
+    { \
+        delete [] ptr; \
+        ptr = NULL; \
+    }
+//=============================================================================
 int CMYSQLWrapper::MapName2Index(MYSQL_RES* result, map<string, int>& mapName2Index)
 {
     if (!result)
@@ -41,10 +70,19 @@ CMYSQLWrapper::CMYSQLWrapper()
 {
     m_szErrMsg[0]='\0';
     m_Database = NULL;
+
+    m_port = MYSQL_WRAPPER_DFT_PORT;
+
+    m_ip = NULL;
+    m_user = NULL;
+    m_pwd = NULL;
+    m_db = NULL;
+    m_charset = NULL;
 }
 CMYSQLWrapper::~CMYSQLWrapper()
 {
     Close();
+    _FreeInitData();
 }
 
 char* CMYSQLWrapper::GetErrMsg()
@@ -60,8 +98,33 @@ void CMYSQLWrapper::_CloseMySQL()
         m_Database = NULL;
     }
 }
+void CMYSQLWrapper::_FreeInitData()
+{
+    m_port = MYSQL_WRAPPER_DFT_PORT;
 
-int CMYSQLWrapper::Open(const char* ip, const char* user, const char* pwd, const char* db, const char* charset)
+    MYSQL_WRAPPER_FREE(m_ip);
+    MYSQL_WRAPPER_FREE(m_user);
+    MYSQL_WRAPPER_FREE(m_pwd);
+    MYSQL_WRAPPER_FREE(m_db);
+    MYSQL_WRAPPER_FREE(m_charset);
+}
+
+int CMYSQLWrapper::Init(const char* ip, const char* user, const char* pwd, const char* db, uint32_t port, const char* charset)
+{
+    _FreeInitData();
+
+    m_port = port;
+
+    MYSQL_WRAPPER_COPY(m_ip,ip);
+    MYSQL_WRAPPER_COPY(m_user,user);
+    MYSQL_WRAPPER_COPY(m_pwd,pwd);
+    MYSQL_WRAPPER_COPY(m_db,db);
+    MYSQL_WRAPPER_COPY(m_charset,charset);
+
+    return 0;
+}
+
+int CMYSQLWrapper::Open()
 {
     _CloseMySQL();
 
@@ -76,9 +139,9 @@ int CMYSQLWrapper::Open(const char* ip, const char* user, const char* pwd, const
         return EMYSQLErrDBInit;
     }
 
-    if (charset)
+    if (m_charset)
     {
-        if (mysql_options(m_Database, MYSQL_SET_CHARSET_NAME, charset) != 0) {
+        if (mysql_options(m_Database, MYSQL_SET_CHARSET_NAME, m_charset) != 0) {
             MYSQL_WRAPPER_ERROR("mysql_options MYSQL_SET_CHARSET_NAME Error %u: %s\n",mysql_errno(m_Database), mysql_error(m_Database));
             return EMYSQLErrDBInit;
         }
@@ -112,7 +175,7 @@ int CMYSQLWrapper::Open(const char* ip, const char* user, const char* pwd, const
 #endif
 
     // Connect to server and check for error...
-    if(mysql_real_connect(m_Database, ip, user, pwd, db, 0, NULL, 0) < 0)
+    if(mysql_real_connect(m_Database, m_ip, m_user, m_pwd, m_db, m_port, NULL, 0) < 0)
     {
         // Alert user...
         MYSQL_WRAPPER_ERROR("Error: Unable to connect to server[%s]\n",mysql_error(m_Database));

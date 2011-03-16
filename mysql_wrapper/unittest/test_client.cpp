@@ -207,10 +207,17 @@ TEST(mysql_wrapper_join, select)
     }
 }
 
+TEST(mysql_value, null)
+{
+    map<string,MYSQLValue> mapData;
+    cout << mapData[""].as<uint32_t>() << endl;
+}
+
 int main(int argc, char **argv)
 {
-    int ret = g_client.Open("localhost","dantezhu",NULL,"soci");
-    //int ret = g_client.Open("127.0.0.1","dantezhu",NULL,"soci");
+    int ret = g_client.Init("localhost","dantezhu",NULL,"soci",3306);
+    //int ret = g_client.Init("127.0.0.1","dantezhu",NULL,"soci");
+    ret = g_client.Open();
     if (ret)
     {
         cout << ret << "," << g_client.GetErrMsg() << endl;

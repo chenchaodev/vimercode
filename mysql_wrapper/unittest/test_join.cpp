@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     sql_join
         << P("what",(char*)"go")
         << P("str1","v1")
-        << P("iend",false);
+        << P("iend",false,"like");
 
     cout << sql_join.keys()
         << endl
@@ -46,6 +46,13 @@ int main(int argc, char **argv)
         << sql_join.pairs();
 
     cout << endl;    
+
+    vector<SQLPair>& vecPairs = sql_join.get_vec_pairs();
+
+    for(vector<SQLPair>::iterator it = vecPairs.begin(); it != vecPairs.end(); ++it)
+    {
+        cout << it->pair() << endl;
+    }
 
     return 0;
 }

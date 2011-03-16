@@ -30,11 +30,7 @@
 
 using namespace std;
 
-#ifndef MYSQL_WRAPPER_ERROR
-#define MYSQL_WRAPPER_ERROR(fmt, args...) \
-    snprintf(m_szErrMsg, sizeof(m_szErrMsg), "[%s][%d][%s]"fmt, \
-             __FILE__, __LINE__,__FUNCTION__, ##args)
-#endif
+#define MYSQL_WRAPPER_DFT_PORT      3306
 
 //统一错误返回码
 typedef enum {
@@ -189,18 +185,27 @@ public:
     char* GetErrMsg();
 
     /**
-     * @brief   连接MYSQL，已经支持了自动重连模式，即mysql server关闭链接会自动重连
+     * @brief   初始化MYSQL，并不真正进行连接
      *
      * @param   ip          IP
      * @param   user        用户名
      * @param   pwd         密码(没有则传NULL)
      * @param   db          库(没有则传NULL)
+     * @param   port        端口
      * @param   charset     编码(NULL,utf8,gb2312)
      *
      * @return  0           succ
      *          else        fail
      */
-    int Open(const char* ip, const char* user, const char* pwd, const char* strDb, const char* charset=NULL);
+    int Init(const char* ip, const char* user, const char* pwd, const char* db, uint32_t port=MYSQL_WRAPPER_DFT_PORT, const char* charset=NULL);
+
+    /**
+     * @brief   连接MYSQL，已经支持了自动重连模式，即mysql server关闭链接会自动重连
+     *
+     * @return  0           succ
+     *          else        fail
+     */
+    int Open();
 
     /**
      * @brief   关闭链接并释放result
@@ -287,10 +292,25 @@ public:
     MYSQL* GetMYSQLPtr();
 
 protected:
+    /**
+     * @brief   关闭mysql
+     */
     void _CloseMySQL();
+    /**
+     * @brief   释放掉申请的init相关的内存
+     */
+    void _FreeInitData();
 
 private:
     char m_szErrMsg[1024];
+
+    uint32_t m_port;
+    
+    char* m_ip;
+    char* m_user;
+    char* m_pwd;
+    char* m_db;
+    char* m_charset;
 
     MYSQL*      m_Database;
 };
