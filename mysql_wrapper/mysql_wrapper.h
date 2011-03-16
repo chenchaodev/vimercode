@@ -266,6 +266,14 @@ public:
     int AffectedRows();
 
     /**
+     * @brief   判断是否已连接
+     *
+     * @return  true        已连接
+     *          false       未连接
+     */
+    bool IsOpen();
+
+    /**
      * @brief   主要是将blob转成字符串
      *
      * @param   src         blob源
@@ -313,5 +321,8 @@ private:
     char* m_charset;
 
     MYSQL*      m_Database;
+
+    //是否连接
+    bool m_bOpen;
 };
 #endif

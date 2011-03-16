@@ -78,6 +78,8 @@ CMYSQLWrapper::CMYSQLWrapper()
     m_pwd = NULL;
     m_db = NULL;
     m_charset = NULL;
+
+    m_bOpen = false;
 }
 CMYSQLWrapper::~CMYSQLWrapper()
 {
@@ -92,6 +94,7 @@ char* CMYSQLWrapper::GetErrMsg()
 
 void CMYSQLWrapper::_CloseMySQL()
 {
+    m_bOpen = false;
     if(m_Database)
     {
         mysql_close(m_Database);
@@ -198,6 +201,8 @@ int CMYSQLWrapper::Open()
 /*#if MYSQL_VERSION_ID < 50013
 #warning "MYSQL_VERSION_ID <= 50013, support MYSQL_OPT_RECONNECT default"
 #endif*/
+
+    m_bOpen = true;
 
     return 0;
 }
@@ -337,6 +342,11 @@ int CMYSQLWrapper::AffectedRows()
         return EMYSQLErrDBRes;
     }
     return ret;
+}
+
+bool CMYSQLWrapper::IsOpen()
+{
+    return m_bOpen;
 }
 
 string CMYSQLWrapper::EscStr(const char* src, uint32_t len)
