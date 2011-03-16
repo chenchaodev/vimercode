@@ -324,6 +324,12 @@ int CMYSQLWrapper::Result(MYSQL_RES*& result)
 
 int CMYSQLWrapper::AffectedRows()
 {
+    if(!m_Database)
+    {
+        MYSQL_WRAPPER_ERROR("Error: query error,m_Database is null\n");
+        return EMYSQLErrSysPtr;
+    }
+
     int ret = mysql_affected_rows(m_Database);
     if(ret<=0)
     {
@@ -335,6 +341,12 @@ int CMYSQLWrapper::AffectedRows()
 
 string CMYSQLWrapper::EscStr(const char* src, uint32_t len)
 {
+    if(!m_Database)
+    {
+        MYSQL_WRAPPER_ERROR("Error: query error,m_Database is null\n");
+        return "";
+    }
+
     if (!src)
     {
         MYSQL_WRAPPER_ERROR("src is null");
