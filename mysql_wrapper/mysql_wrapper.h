@@ -127,6 +127,16 @@ public:
     }
 
 private:
+    int pri_as(char *& val)
+    {
+        val = (char*)data();
+        return 0;
+    }
+    int pri_as(const char *& val)
+    {
+        val = data();
+        return 0;
+    }
     int pri_as(string& val)
     {
         if (m_bNull)
