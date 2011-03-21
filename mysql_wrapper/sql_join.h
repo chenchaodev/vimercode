@@ -149,6 +149,7 @@ private:
         }
         return 0;
     }
+
     /**
      * @brief   作用和const char*一样，但是为了解决这种情况下会走模板的bug:
      *          SQLPair("appname",(char*)"yidong")
@@ -162,6 +163,7 @@ private:
     {
         return _init(key, (const char*)value);
     }
+
     /**
      * @brief   实际初始化函数，特殊处理了列值为string类型（在列值两边加上'）
      *
@@ -176,6 +178,33 @@ private:
         m_ss_value << "'" << value << "'";
         return 0;
     }
+
+    /**
+     * @brief   特殊处理一下char，否则会被stringstream当作字符串处理
+     *
+     * @param   key         列名   
+     * @param   value       列值
+     *
+     * @return  0
+     */
+    int _init(const string& key, const int8_t& value)
+    {
+        return _init(key,(int32_t)value);
+    }
+
+    /**
+     * @brief   特殊处理一下unsigned char，否则会被stringstream当作字符串处理
+     *
+     * @param   key         列名   
+     * @param   value       列值
+     *
+     * @return  0
+     */
+    int _init(const string& key, const uint8_t& value)
+    {
+        return _init(key,(uint32_t)value);
+    }
+    
     /**
      * @brief   实际初始化函数，模版化处理。
      *          在内部实现的好处是外边不会用<string>强制调到不应该调用的处理string、char*的函数
