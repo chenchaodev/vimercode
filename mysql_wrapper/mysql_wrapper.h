@@ -192,7 +192,7 @@ public:
      *
      * @return  错误信息
      */
-    char* GetErrMsg();
+    const char* GetErrMsg();
 
     /**
      * @brief   初始化MYSQL，并不真正进行连接
@@ -232,6 +232,7 @@ public:
      *          else        fail
      */
     int Query(const char* strSql);
+    int Query(const string& strSql);
 
     /**
      * @brief   针对Read(select)相关的的Query，可以支持blob了
@@ -243,17 +244,19 @@ public:
      *          else            fail
      */
     int Query(const char* strSql, vector<map<string, MYSQLValue> > &vecData);
+    int Query(const string& strSql, vector<map<string, MYSQLValue> > &vecData);
 
     /**
      * @brief   针对Write(insert,update,delete)相关的Query
      *
      * @param   strSql          sql语句
-     * @param   affectRowsCount 影响的行的个数
+     * @param   rowsCount       影响的行的个数
      *
      * @return  0               succ
      *          else            fail
      */
-    int Query(const char* strSql, int& affectRowsCount);
+    int Query(const char* strSql, int& rowsCount);
+    int Query(const string& strSql, int& rowsCount);
 
 
     /**
@@ -301,6 +304,7 @@ public:
      * @return  转化后的字符串
      */
     string EscStr(const char* src);
+    string EscStr(const string& src);
 
     /**
      * @brief   获取原始的mysql指针，一般情况下不要调用

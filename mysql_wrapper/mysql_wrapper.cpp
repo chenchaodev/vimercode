@@ -87,7 +87,7 @@ CMYSQLWrapper::~CMYSQLWrapper()
     _FreeInitData();
 }
 
-char* CMYSQLWrapper::GetErrMsg()
+const char* CMYSQLWrapper::GetErrMsg()
 {
     return m_szErrMsg;
 }
@@ -234,6 +234,11 @@ int CMYSQLWrapper::Query(const char* strSql)
     return 0;
 }
 
+int CMYSQLWrapper::Query(const string& strSql)
+{
+    return this->Query(strSql.c_str());
+}
+
 int CMYSQLWrapper::Query(const char* strSql, vector<map<string, MYSQLValue> > &vecData)
 {
     int ret = Query(strSql);
@@ -291,7 +296,12 @@ int CMYSQLWrapper::Query(const char* strSql, vector<map<string, MYSQLValue> > &v
     return 0;
 }
 
-int CMYSQLWrapper::Query(const char* strSql, int& affectRowsCount)
+int CMYSQLWrapper::Query(const string& strSql, vector<map<string, MYSQLValue> > &vecData)
+{
+    return this->Query(strSql.c_str(),vecData);
+}
+
+int CMYSQLWrapper::Query(const char* strSql, int& rowsCount)
 {
     int ret = Query(strSql);
     if (ret)
@@ -299,9 +309,14 @@ int CMYSQLWrapper::Query(const char* strSql, int& affectRowsCount)
         return ret;
     }
 
-    affectRowsCount = AffectedRows();
+    rowsCount = AffectedRows();
 
     return 0;
+}
+
+int CMYSQLWrapper::Query(const string& strSql, int& rowsCount)
+{
+    return this->Query(strSql.c_str(),rowsCount);
 }
 
 int CMYSQLWrapper::Result(MYSQL_RES*& result)
@@ -382,6 +397,11 @@ string CMYSQLWrapper::EscStr(const char* src)
     }
     uint32_t len = strlen(src);
     return EscStr(src,len);
+}
+
+string CMYSQLWrapper::EscStr(const string& src)
+{
+    return this->EscStr(src.c_str());
 }
 
 MYSQL* CMYSQLWrapper::GetMYSQLPtr()
