@@ -37,7 +37,7 @@ public:
      * @param   key         列名
      * @param   value       列值
      */
-    template <typename T> 
+    template <typename T>
     SQLPair (const string& key, const T& value, const string& op="=")
     {
         m_ss_value.clear();
@@ -130,7 +130,7 @@ private:
     /**
      * @brief   实际初始化函数，特殊处理了列值为char*类型（判断NULL，并且在列值两边加上'）
      *
-     * @param   key         列名   
+     * @param   key         列名
      * @param   value       列值
      *
      * @return  0
@@ -154,7 +154,7 @@ private:
      * @brief   作用和const char*一样，但是为了解决这种情况下会走模板的bug:
      *          SQLPair("appname",(char*)"yidong")
      *
-     * @param   key         列名   
+     * @param   key         列名
      * @param   value       列值
      *
      * @return  0
@@ -167,7 +167,7 @@ private:
     /**
      * @brief   实际初始化函数，特殊处理了列值为string类型（在列值两边加上'）
      *
-     * @param   key         列名   
+     * @param   key         列名
      * @param   value       列值
      *
      * @return  0
@@ -181,40 +181,42 @@ private:
 
     /**
      * @brief   特殊处理一下char，否则会被stringstream当作字符串处理
+     *          必须用char，不能用int8_t
      *
-     * @param   key         列名   
+     * @param   key         列名
      * @param   value       列值
      *
      * @return  0
      */
-    int _init(const string& key, const int8_t& value)
+    int _init(const string& key, const char& value)
     {
         return _init(key,(int32_t)value);
     }
 
     /**
      * @brief   特殊处理一下unsigned char，否则会被stringstream当作字符串处理
+     *          必须用unsigned char，不能用uint8_t 
      *
-     * @param   key         列名   
+     * @param   key         列名
      * @param   value       列值
      *
      * @return  0
      */
-    int _init(const string& key, const uint8_t& value)
+    int _init(const string& key, const unsigned char& value)
     {
         return _init(key,(uint32_t)value);
     }
-    
+
     /**
      * @brief   实际初始化函数，模版化处理。
      *          在内部实现的好处是外边不会用<string>强制调到不应该调用的处理string、char*的函数
      *
-     * @param   key         列名   
+     * @param   key         列名
      * @param   value       列值
      *
      * @return  0
      */
-    template <typename T> 
+    template <typename T>
     int _init(const string& key, const T& value)
     {
         m_key = key;
@@ -257,7 +259,7 @@ public:
      *
      * @return  0
      */
-    template <typename T> 
+    template <typename T>
     int add_pair(const string& key, const T& value)
     {
         return add_pair(SQLPair(key,value));
