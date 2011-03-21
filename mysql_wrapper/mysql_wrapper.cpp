@@ -301,7 +301,7 @@ int CMYSQLWrapper::Query(const string& strSql, vector<map<string, MYSQLValue> > 
     return this->Query(strSql.c_str(),vecData);
 }
 
-int CMYSQLWrapper::Query(const char* strSql, int& rowsCount)
+int CMYSQLWrapper::Query(const char* strSql, int& affectedRows)
 {
     int ret = Query(strSql);
     if (ret)
@@ -309,14 +309,14 @@ int CMYSQLWrapper::Query(const char* strSql, int& rowsCount)
         return ret;
     }
 
-    rowsCount = AffectedRows();
+    affectedRows = AffectedRows();
 
     return 0;
 }
 
-int CMYSQLWrapper::Query(const string& strSql, int& rowsCount)
+int CMYSQLWrapper::Query(const string& strSql, int& affectedRows)
 {
-    return this->Query(strSql.c_str(),rowsCount);
+    return this->Query(strSql.c_str(),affectedRows);
 }
 
 int CMYSQLWrapper::Result(MYSQL_RES*& result)

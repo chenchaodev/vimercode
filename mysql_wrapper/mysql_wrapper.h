@@ -250,13 +250,13 @@ public:
      * @brief   针对Write(insert,update,delete)相关的Query
      *
      * @param   strSql          sql语句
-     * @param   rowsCount       影响的行的个数
+     * @param   affectedRows    影响的行的个数
      *
      * @return  0               succ
      *          else            fail
      */
-    int Query(const char* strSql, int& rowsCount);
-    int Query(const string& strSql, int& rowsCount);
+    int Query(const char* strSql, int& affectedRows);
+    int Query(const string& strSql, int& affectedRows);
 
 
     /**
