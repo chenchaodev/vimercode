@@ -137,6 +137,20 @@ private:
         val = data();
         return 0;
     }
+    int pri_as(char& val)
+    {
+        int32_t tmp_val;
+        int ret = pri_as(tmp_val);
+        val = tmp_val;
+        return ret;
+    }
+    int pri_as(unsigned char& val)
+    {
+        uint32_t tmp_val;
+        int ret = pri_as(tmp_val);
+        val = tmp_val;
+        return ret;
+    }
     int pri_as(string& val)
     {
         if (m_bNull)

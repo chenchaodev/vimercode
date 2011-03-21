@@ -186,7 +186,7 @@ TEST(mysql_wrapper_join, select)
         << sql_join2.pairs("and");
 
     vector<map<string,MYSQLValue> > vecData;
-    int ret = g_client.Query(ss.str().c_str(),vecData);
+    int ret = g_client.Query(ss.str(),vecData);
     ASSERT_EQ(ret, 0) << g_client.GetErrMsg();
 
     foreach(vecData, it_vec)
@@ -196,11 +196,13 @@ TEST(mysql_wrapper_join, select)
             cout << it_map->first << ",";
             if (it_map->first == "sex")
             {
-                cout << it_map->second.as<uint32_t>();
+                cout << int(it_map->second.as<char>());
             }
             else
             {
                 cout << it_map->second.data();
+                //cout << it_map->second.as<char*>();
+                //cout << it_map->second.as<const char*>();
             }
             cout << "," << it_map->second.size() << endl;
         }   
@@ -215,7 +217,8 @@ TEST(mysql_value, null)
 
 int main(int argc, char **argv)
 {
-    int ret = g_client.Init("localhost","dantezhu",NULL,"soci",3306);
+    int ret = g_client.Init("10.6.207.119","dantezhu","dantezhu","soci",3306);
+    //int ret = g_client.Init("localhost","dantezhu",NULL,"soci",3306);
     //int ret = g_client.Init("127.0.0.1","dantezhu",NULL,"soci");
     ret = g_client.Open();
     if (ret)
