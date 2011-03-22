@@ -178,9 +178,8 @@ int CMYSQLWrapper::Open()
 #endif
 
     // Connect to server and check for error...
-    if(mysql_real_connect(m_Database, m_ip, m_user, m_pwd, m_db, m_port, NULL, 0) < 0)
+    if(!mysql_real_connect(m_Database, m_ip, m_user, m_pwd, m_db, m_port, NULL, 0))
     {
-        // Alert user...
         MYSQL_WRAPPER_ERROR("Error: Unable to connect to server[%s]\n",mysql_error(m_Database));
 
         return EMYSQLErrDBConn;
