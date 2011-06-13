@@ -35,10 +35,6 @@ class ptr_proxy
 public:
     ptr_proxy(const T* pobj=NULL) : m_ppobj(NULL), m_pcount(NULL)
     {
-        if (pobj == NULL)
-        {
-            return;
-        }
         init(pobj);
     }
 
@@ -155,6 +151,12 @@ public:
 protected:
     void init(const T* pobj)
     {
+        if (pobj == NULL)
+        {
+            m_ppobj = NULL;
+            m_pcount = NULL;
+            return;
+        }
         m_ppobj = new (T*)();
         *m_ppobj = (T*)pobj;
         m_pcount = new int(); // 初始化计数值为 1
