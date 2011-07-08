@@ -8,8 +8,9 @@
 #     HomePage: http://www.vimer.cn
 #
 #      Created: 2011-03-09 19:10:45
-#      Version: 0.0.1
+#      Version: 0.0.2
 #      History:
+#               0.0.2 | dantezhu | 2011-07-08 11:27:06 | affectedRows ø…“‘∑µªÿ0
 #               0.0.1 | dantezhu | 2011-03-09 19:10:45 | initialization
 #
 =============================================================================*/
@@ -350,11 +351,13 @@ int CMYSQLWrapper::AffectedRows()
     }
 
     int ret = mysql_affected_rows(m_Database);
-    if(ret<=0)
+    //Mod-Begin by dantezhu in 2011-07-08 11:27:43
+    if(ret<0)
     {
         MYSQL_WRAPPER_ERROR("Error: AffectedRows rows:[%u]\n",ret);
-        return EMYSQLErrDBRes;
+        return EMYSQLErrSys;
     }
+    //Mod-End
     return ret;
 }
 
