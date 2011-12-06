@@ -1,9 +1,0 @@
-[INFO][2011-12-05 20:02:02,290][4224][mysession.py:19][get_session_info] exception occur.msg[expected string or buffer], traceback[Traceback (most recent call last):
-  File "E:\svndata\dantezhucode\py\bottle_site_tpl\module\mysession.py", line 17, in get_session_info
-    session_info = json.loads(data)
-  File "C:\Python27\lib\json\__init__.py", line 326, in loads
-    return _default_decoder.decode(s)
-  File "C:\Python27\lib\json\decoder.py", line 366, in decode
-    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
-TypeError: expected string or buffer
-]
