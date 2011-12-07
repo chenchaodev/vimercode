@@ -4,7 +4,6 @@
 import setting
 
 from bottle import debug, run
-from bottle import TEMPLATE_PATH
 
 from web import app
 
