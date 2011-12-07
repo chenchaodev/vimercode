@@ -6,7 +6,7 @@ import setting
 from bottle import debug, run
 from bottle import TEMPLATE_PATH
 
-from web.index import app
+from web import app
 
 if __name__ == '__main__':
     debug(True)
