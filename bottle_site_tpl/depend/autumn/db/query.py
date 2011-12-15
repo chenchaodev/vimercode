@@ -188,7 +188,8 @@ class Query(object):
         cursor = cls.get_cursor(db)
         
 #Add-Begin by dantezhu in 2011-11-14 12:17:10
-        values = [it.encode('utf8') if isinstance(it, unicode) else it for it in values]
+        if db.conn.dbtype == 'mysql':
+            values = [it.encode('utf8') if isinstance(it, unicode) else it for it in values]
 #Add-End
                 
         try:
