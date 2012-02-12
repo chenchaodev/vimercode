@@ -1,3 +1,8 @@
+#ADD-BEGIN by dantezhu in 2012-02-10 02:30:57
+from threading import local
+
+local_data = local()
+#ADD-END
         
 class Database(object):
     placeholder = '?'
@@ -14,11 +19,32 @@ class Database(object):
             self.connection = MySQLdb.connect(**kwargs)
             self.placeholder = '%s'
 
+#ADD-BEGIN by dantezhu in 2012-02-10 02:30:40
+    def __getattr__(self, key):
+        if key == 'connection':
+            if not hasattr(local_data, key):
+                raise AttributeError, 'the object has no attr: ' + key
+                return None
+
+            cmd = 'local_data.' + str(key)
+            return eval(cmd)
+        else:
+            return object.__getattr__(self, key)
+
+    def __setattr__(self, key, value):
+        if key == 'connection':
+            cmd = 'local_data.' + str(key) + '=value'
+            exec cmd
+        else:
+            object.__setattr__(self, key, value)
+#ADD-END
+
 class DBConn(object):
     def __init__(self):
         self.b_debug = False
         self.b_commit = True
         self.conn = None
+
 
 autumn_db = DBConn()
 autumn_db.conn = Database()
