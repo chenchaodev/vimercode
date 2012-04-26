@@ -26,15 +26,13 @@ class Database(object):
                 raise AttributeError, 'the object has no attr: ' + key
                 return None
 
-            cmd = 'local_data.' + str(key)
-            return eval(cmd)
+            return getattr(local_data, key)
         else:
             return object.__getattr__(self, key)
 
     def __setattr__(self, key, value):
         if key == 'connection':
-            cmd = 'local_data.' + str(key) + '=value'
-            exec cmd
+            setattr(local_data, key, value)
         else:
             object.__setattr__(self, key, value)
 #ADD-END
