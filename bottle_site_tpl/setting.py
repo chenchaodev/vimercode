@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO,
 
 DATABASE = {
     'engine' : 'mysql',
-    'db' : 'test',
+    'db' : 'test_b',
     'user' : 'dantezhu',
     'passwd' : '',
     'host' : 'localhost',
