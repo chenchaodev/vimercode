@@ -28,7 +28,7 @@ class Database(object):
 
             return getattr(local_data, key)
         else:
-            return object.__getattr__(self, key)
+            return object.__getattribute__(self, key)
 
     def __setattr__(self, key, value):
         if key == 'connection':
