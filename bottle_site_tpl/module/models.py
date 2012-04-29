@@ -14,6 +14,6 @@ class Frame(Model):
     '''帧'''
     class Meta:
         defaults = {
-            'create_time': lambda: datetime.datetime.now(),
+            'create_time': datetime.datetime.now,
             'up_num':0,
         }
