@@ -38,25 +38,6 @@ function string_split(str, split_char)
     return sub_str_tab;
 end
 
---解析loc
---uri: /req_route?x=1
-function parse_loc(uri)
-    pos = string.find(uri, '?')
-    if pos ~= nil then
-        loc = string.sub(uri, 0, pos-1)
-    else
-        loc = uri
-    end
-
-    -- 有可能是 /v3/user/get_info HTTP/1.1
-    pos = string.find(loc, ' ')
-    if pos ~= nil then
-        loc = string.sub(loc, 0, pos-1)
-    end
-
-    return loc
-end
-
 function parse_params(method, args, body)
     --选择从get参数还是post参数中获取
     if method == 2 then 
@@ -107,14 +88,14 @@ function is_match_appid(appid)
 end
 
 --method: get:2, post:8
---uri: /req_route?x=1
+--uri: /req_route
 --args: x=1
 --body: y=1
 --return: 433: 深圳, 434:合作区
 
 function get_route_id(method, uri, args, body)
 
-    loc = parse_loc(uri)
+    loc = uri
     params = parse_params(method, args, body)
 
     if loc == nil or params == nil or params['pf'] == nil or params['appid'] == nil then
@@ -154,4 +135,4 @@ function main()
 end
 
 --测试用的
---main()
+main()

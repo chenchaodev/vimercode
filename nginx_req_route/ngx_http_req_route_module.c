@@ -5,7 +5,7 @@
 
 #define DFT_ROUTE_ID 433
 
-extern int get_route_id(ngx_log_t *log, int method, char* uri, char* args, char* body, int body_size);
+extern int get_route_id(ngx_http_request_t *r);
 
 static  char *ngx_http_req_route(ngx_conf_t *cf ,ngx_command_t *cmd,void *conf);
 static ngx_command_t ngx_http_req_route_commands[]={
@@ -49,24 +49,7 @@ void ngx_http_foo_post_handler(ngx_http_request_t *r){
     // 请求全部读完后从这里入口, 可以产生响应
     /*ngx_http_finalize_request(r, NGX_HTTP_OK);*/
 
-    ngx_http_request_body_t* rb = r->request_body;
-
-    char* body = NULL;
-    int body_size = 0;
-
-    if (rb && rb->buf)
-    {
-        body = (char*)rb->buf->pos;
-        body_size = rb->buf->last - rb->buf->pos;
-    }
-
-    int result = get_route_id(r->connection->log, 
-                              (int)r->method,
-                              (char*)r->uri.data,
-                              (char*)r->args.data,
-                              body,
-                              body_size
-                              );
+    int result = get_route_id(r);
     ngx_log_debug(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "get_route_id result:%d", result);
     if (result < 0)
     {
